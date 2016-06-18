@@ -1,9 +1,10 @@
 import numpy as np
 import cv2
 import datetime
+import dlib
 
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-smileCascade = cv2.CascadeClassifier("smiled_05.xml")
+landmarks_predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 cap = cv2.VideoCapture(0)
 
@@ -19,20 +20,12 @@ while(True):
         minSize=(40, 40),
         flags=cv2.cv.CV_HAAR_SCALE_IMAGE
     )
-
+    
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        face_img_g = gray[y:y+h, x:x+w]
-        face_img_c = frame[y:y+h, x:x+w]
-        smiles = smileCascade.detectMultiScale(
-            face_img_g,
-            scaleFactor=2.0,
-            minNeighbors=25,
-            minSize=(35, 35),
-            flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-        )
-        for (x, y, w, h) in smiles:
-            cv2.rectangle(face_img_c, (x, y), (x+w, y+h), (0,0,255), 2)
+        rect = dlib.rectangle(long(x), long(y), long(x+w), long(y+h))
+        for p in landmarks_predictor(gray, rect).parts():
+            cv2.circle(frame, (p.x, p.y) , 3, (255, 0,0))
 
 
     cv2.imshow('frame', frame)
