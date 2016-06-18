@@ -17,10 +17,10 @@ while(True):
         gray,
         scaleFactor=1.1,
         minNeighbors=5,
-        minSize=(40, 40),
+        minSize=(64, 64),
         flags=cv2.cv.CV_HAAR_SCALE_IMAGE
     )
-    
+
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         rect = dlib.rectangle(long(x), long(y), long(x+w), long(y+h))
