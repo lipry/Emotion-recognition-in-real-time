@@ -28,7 +28,7 @@ while(True):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         rect = dlib.rectangle(long(x), long(y), long(x+w), long(y+h))
         landmarks = np.array([[p.x, p.y] for p in landmarks_predictor(gray, rect).parts()])
-        print landmarks[0]
+        #print landmarks[0]
         x_rect_min = np.array(landmarks[np.argmin(landmarks[:, 0]),0])
         x_rect_max = np.array(landmarks[np.argmax(landmarks[:, 0]),0])
         y_rect_min = np.array(landmarks[np.argmin(landmarks[:, 1]),1])
@@ -40,7 +40,7 @@ while(True):
         #cv2.circle(frame, (x_rect_max, y_rect_min), 3, (0,0,255))
         tl_rect = np.array([x_rect_min, y_rect_max])
         normalized_landmarks = np.apply_along_axis(normalize_point, 1, landmarks, tl_rect, np.array([x_rect_max - x_rect_min, y_rect_max - y_rect_min]))
-        print normalized_landmarks
+        print np.hstack(normalized_landmarks)
         #cv2.circle(frame, (tl_rect[0], tl_rect[1]), 3, (255,0,0))
         #for p in landmarks_predictor(gray, rect).parts():
             #cv2.circle(frame, (p.x, p.y), 3, (255,0,0))
