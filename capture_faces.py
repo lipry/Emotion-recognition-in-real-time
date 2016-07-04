@@ -12,11 +12,13 @@ landmarks_predictor = face_landmarks.faceLandmarks("shape_predictor_68_face_land
 
 emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
 
-print "Exracting training data from dataset"
+print "Extracting training data from dataset..."
 features, labels = ck_landmarks_extraction.get_training_data(sys.argv[1], sys.argv[2])
 
-print "Init Support Vector Machine"
-clf = svm.SVC(gamma=0.001, C=200.)
+print "happy: ",
+
+print "Init Support Vector Machine..."
+clf = svm.SVC(kernel='rbf' , C = 100, gamma=0.400)
 clf.fit(features, labels)
 
 cap = cv2.VideoCapture(0)
