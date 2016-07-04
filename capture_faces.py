@@ -3,9 +3,21 @@ import cv2
 import datetime
 import dlib
 import face_landmarks
+import ck_landmarks_extraction
+import sys
+from sklearn import svm
 
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 landmarks_predictor = face_landmarks.faceLandmarks("shape_predictor_68_face_landmarks.dat")
+
+emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
+
+print "Exracting training data from dataset"
+features, labels = ck_landmarks_extraction.get_training_data(sys.argv[1], sys.argv[2])
+
+print "Init Support Vector Machine"
+clf = svm.SVC(gamma=0.001, C=200.)
+clf.fit(features, labels)
 
 cap = cv2.VideoCapture(0)
 
@@ -26,7 +38,8 @@ while(True):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         rect = dlib.rectangle(long(x), long(y), long(x+w), long(y+h))
         landmarks = landmarks_predictor.get_landmarks(frame, rect)
-        print landmarks
+        pred = clf.predict([landmarks])
+        print pred, emotions[pred[0]]
         #cv2.circle(frame, (tl_rect[0], tl_rect[1]), 3, (255,0,0))
         #for p in landmarks_predictor(gray, rect).parts():
             #cv2.circle(frame, (p.x, p.y), 3, (255,0,0))
