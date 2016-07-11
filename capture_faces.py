@@ -3,18 +3,21 @@ import cv2
 import datetime
 import dlib
 import face_landmarks
-import ck_landmarks_extraction
 import sys
 from sklearn import svm
+import datasets
+import pickle
 
-faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-landmarks_predictor = face_landmarks.faceLandmarks("shape_predictor_68_face_landmarks.dat")
+faceCascade = cv2.CascadeClassifier(datasets.FRONTAL_FACE_HAARCASCADE_DATASET)
+landmarks_predictor = face_landmarks.faceLandmarks(datasets.LANDMARKS_DATASET)
 
 emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
 
-print "Extracting training data from dataset..."
-features, labels = ck_landmarks_extraction.get_training_data(sys.argv[1], sys.argv[2])
+print "Get data from ", datasets.EMOTION_FEATURES_DATASET
+with open(datasets.EMOTION_FEATURES_DATASET, "r") as infile:
+    features, labels = pickle.load(infile)
 
+print features, labels
 print "happy: ",
 
 print "Init Support Vector Machine..."

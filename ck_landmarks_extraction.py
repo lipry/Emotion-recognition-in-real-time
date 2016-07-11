@@ -4,6 +4,8 @@ import numpy as np
 import cv2
 import dlib
 import face_landmarks
+import pickle
+import datasets
 
 def get_training_data(image_path, labels_path):
     landmarks_predictor = face_landmarks.faceLandmarks("shape_predictor_68_face_landmarks.dat")
@@ -31,22 +33,13 @@ def get_training_data(image_path, labels_path):
                     features.append(landmarks)
     return features, labels
 
-# if(len(sys.argv) != 3):
-#     print "Wrong arguments"
-# #print sys.arg
-# features, labels = get_training_data(sys.argv[1], sys.argv[2])
-#
-# clf = svm.SVC(gamma=0.001, C=200.)
-# clf.fit(features, labels)
-#
-# landmarks_predictor = face_landmarks.faceLandmarks("shape_predictor_68_face_landmarks.dat")
-# detector = dlib.get_frontal_face_detector()
-# img = cv2.imread("/Users/fabiolipreri/Desktop/emotions_data/cohn-kanade-images/S138/005/S138_005_00000016.png",cv2.IMREAD_GRAYSCALE)
-# dets = detector(img, 1)
-# for k, rect in enumerate(dets):
-#     example_landmarks = landmarks_predictor.get_landmarks(img, rect)
-#
-# print example_landmarks
-#
-# pred = clf.predict([example_landmarks])
-# print pred
+if(len(sys.argv) != 3):
+    print "Wrong arguments"
+
+
+print "Extracting training data from dataset..."
+features, labels = get_training_data(sys.argv[1], sys.argv[2])
+
+print "Saving features and labels in file"
+with open(datasets.EMOTION_FEATURES_DATASET, "w") as outfile:
+    pickle.dump([features, labels], outfile)
