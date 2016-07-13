@@ -10,10 +10,7 @@ class faceLandmarks:
 
     def get_landmarks(self, image, rectangle):
         landmarks = np.array([[p.x, p.y] for p in self.predictor(image, rectangle).parts()])
-        x_rect_min = np.array(landmarks[np.argmin(landmarks[:, 0]),0])
-        x_rect_max = np.array(landmarks[np.argmax(landmarks[:, 0]),0])
-        y_rect_min = np.array(landmarks[np.argmin(landmarks[:, 1]),1])
-        y_rect_max = np.array(landmarks[np.argmax(landmarks[:, 1]),1])
-        tl_rect = np.array([x_rect_min, y_rect_max])
-        normalized_landmarks = np.apply_along_axis(self.normalize_point, 1, landmarks, tl_rect, np.array([x_rect_max - x_rect_min, y_rect_max - y_rect_min]))
+        tl = np.array([rectangle.left(), rectangle.top()])
+        size = np.array([rectangle.width(), rectangle.height()])
+        normalized_landmarks = np.apply_along_axis(self.normalize_point, 1, landmarks, tl, size)
         return np.hstack(normalized_landmarks)
