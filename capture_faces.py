@@ -5,6 +5,7 @@ import dlib
 import face_landmarks
 import sys
 from sklearn import svm
+from sklearn import multiclass
 import datasets
 import pickle
 
@@ -21,7 +22,7 @@ print features, labels
 print "happy: ",
 
 print "Init Support Vector Machine..."
-clf = svm.SVC(kernel='rbf' , C = 100, gamma=0.400)
+clf = multiclass.OneVsRestClassifier(svm.SVC(kernel='linear' , C = 500))
 clf.fit(features, labels)
 
 cap = cv2.VideoCapture(0)
