@@ -9,6 +9,7 @@ from sklearn import multiclass
 import datasets
 import pickle
 
+font = cv2.FONT_HERSHEY_SIMPLEX
 faceCascade = cv2.CascadeClassifier(datasets.FRONTAL_FACE_HAARCASCADE_DATASET)
 landmarks_predictor = face_landmarks.faceLandmarks(datasets.LANDMARKS_DATASET)
 
@@ -45,7 +46,8 @@ while(True):
         rect = dlib.rectangle(long(x), long(y), long(x+w), long(y+h))
         landmarks = landmarks_predictor.get_landmarks(frame, rect)
         pred = clf.predict([landmarks])
-        print pred, emotions[pred[0]]
+        cv2.putText(frame,emotions[pred[0]],(x,y-10), font, 1,(255,255,255),2)
+	#print pred, emotions[pred[0]]
         #cv2.circle(frame, (tl_rect[0], tl_rect[1]), 3, (255,0,0))
         #for p in landmarks_predictor(gray, rect).parts():
             #cv2.circle(frame, (p.x, p.y), 3, (255,0,0))
